@@ -27,6 +27,7 @@ class QAGenerator:
 
         self.model = model
         self.questions_per_section = questions_per_section
+        self.llm_questions_annex = llm_questions_annex
         
         # Load API key from .env file
         load_dotenv()
