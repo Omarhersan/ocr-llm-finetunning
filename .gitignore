@@ -1,6 +1,12 @@
 # Python virtual environment
 venv/
-__pycache__/
 *.pyc
 
 data/
+
+# Environment variables file
+.env
+
+
+# All pycache directories
+__pycache__/

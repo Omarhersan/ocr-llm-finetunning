@@ -2,7 +2,7 @@ import re
 import json
 import csv
 from pathlib import Path
-from preprocessing.constants import MONTHS
+from constants import MONTHS
 
 class TableExtractor:
     """Extracts and reconstructs payment tables from cleaned contract text."""
