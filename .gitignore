@@ -11,3 +11,6 @@ data/
 
 # All pycache directories
 __pycache__/
+
+# IDE specific files
+.vscode/

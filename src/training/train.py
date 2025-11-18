@@ -16,6 +16,7 @@ import os
 import json
 import time
 from pathlib import Path
+from typing import Optional
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -73,7 +74,7 @@ def upload_training_file(client: OpenAI, file_path: Path) -> str:
     return response.id
 
 
-def create_finetune_job(client: OpenAI, training_file_id: str, model: str, suffix: str = None) -> str:
+def create_finetune_job(client: OpenAI, training_file_id: str, model: str, suffix: Optional[str] = None) -> str:
     """
     Crea un trabajo de fine-tuning.
     
@@ -92,17 +93,20 @@ def create_finetune_job(client: OpenAI, training_file_id: str, model: str, suffi
     print(f"Modelo base: {model}")
     print(f"Training file: {training_file_id}")
     
-    params = {
-        "training_file": training_file_id,
-        "model": model,
-    }
-    
     # Agregar sufijo personalizado si se proporciona
     if suffix:
-        params["suffix"] = suffix[:18]  # OpenAI limita a 18 caracteres
-        print(f"Sufijo del modelo: {params['suffix']}")
-    
-    response = client.fine_tuning.jobs.create(**params)
+        suffix_trimmed = suffix[:18]  # OpenAI limita a 18 caracteres
+        print(f"Sufijo del modelo: {suffix_trimmed}")
+        response = client.fine_tuning.jobs.create(
+            training_file=training_file_id,
+            model=model,
+            suffix=suffix_trimmed
+        )
+    else:
+        response = client.fine_tuning.jobs.create(
+            training_file=training_file_id,
+            model=model
+        )
     
     print(f"✓ Trabajo de fine-tuning creado")
     print(f"  Job ID: {response.id}")
@@ -172,7 +176,7 @@ def monitor_finetune_job(client: OpenAI, job_id: str, check_interval: int = 30):
         return None
 
 
-def save_model_info(job_id: str, file_id: str, model_id: str = None):
+def save_model_info(job_id: str, file_id: str, model_id: Optional[str] = None):
     """
     Guarda la información del modelo fine-tuned en un archivo JSON.
     
